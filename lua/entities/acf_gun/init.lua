@@ -68,7 +68,7 @@ do -- Random timer crew stuff
 		self.CrewsByType = self.CrewsByType or {}
 		local Sum1, Count1 = ACF.WeightedLinkSum(self.CrewsByType.Loader or {}, GetReloadEff, self, self.CurrentCrate or self)
 		local Sum2, Count2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, GetReloadEff, self, self.CurrentCrate or self)
-		local Sum, Count = Sum1 + Sum2 * 0.25, Count1 + Count2 -- Commanders are 25% as effective as loaders
+		local Sum, Count = Sum1 + Sum2 * 0.5, Count1 + Count2
 		local Val = Sum * ACF.AsymptoticFalloff(Count, ACF.LoaderMaxBonus)
 		self.LoadCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
 	end
@@ -77,7 +77,7 @@ do -- Random timer crew stuff
 		self.CrewsByType = self.CrewsByType or {}
 		local Sum1, Count1 = ACF.WeightedLinkSum(self.CrewsByType.Gunner or {}, function(Crew) return Crew.TotalEff end)
 		local Sum2, Count2 = ACF.WeightedLinkSum(self.CrewsByType.Commander or {}, function(Crew) return Crew.TotalEff end)
-		local Sum, Count = Sum1 + Sum2 * 0.25, Count1 + Count2 -- Commanders are 25% as effective as gunners
+		local Sum, Count = Sum1 + Sum2 * 0.5, Count1 + Count2
 		local Val = (Count > 0) and (Sum / Count) or 0
 		self.AccuracyCrewMod = math.Clamp(Val, ACF.CrewFallbackCoef, 1)
 	end
@@ -774,7 +774,7 @@ do -- Metamethods --------------------------------
 				-- If not automatic, consider the affect of crew
 				if not TimeOverride then
 					self:UpdateLoadMod()
-					Time = Time * (2 - self.LoadCrewMod)
+					Time = Time * (1 + (1 - self.LoadCrewMod))
 				end
 
 				self.ReloadTime   = Time

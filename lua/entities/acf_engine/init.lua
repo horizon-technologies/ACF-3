@@ -699,10 +699,10 @@ function ENT:GetConsumption(Throttle, RPM, FuelTank, SelfTbl)
 	if not IsValid(FuelTank) then return 0 end
 
 	if SelfTbl.FuelType == "Electric" then
-		return Throttle * SelfTbl.FuelUse * SelfTbl.Torque * RPM * 1.05e-4 * (2 - self.FuelCrewMod)
+		return Throttle * SelfTbl.FuelUse * SelfTbl.Torque * RPM * 1.05e-4 * (5 - (self.FuelCrewMod * 4))
 	else
 		local IdleConsumption = SelfTbl.PeakPower * 5e2
-		return SelfTbl.FuelUse * (IdleConsumption + Throttle * SelfTbl.Torque * RPM) / FuelTank.FuelDensity * (2 - self.FuelCrewMod)
+		return SelfTbl.FuelUse * (IdleConsumption + Throttle * SelfTbl.Torque * RPM) / FuelTank.FuelDensity * (5 - (self.FuelCrewMod * 4)
 	end
 end
 

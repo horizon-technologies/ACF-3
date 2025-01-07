@@ -9,11 +9,7 @@ function Ammo:OnLoaded()
 	self.Name		 = "High Explosive Anti-Tank Fin Stabilized"
 	self.Description = "An improved HEAT round with better standoff and explosive power."
 	self.Blacklist = ACF.GetWeaponBlacklist({
-		C = true,
-		M = true,
-		AL = true,
-		HW = true,
-		SC = true,
+
 	})
 end
 

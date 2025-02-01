@@ -774,6 +774,18 @@ function PANEL:AddModelPreview(Model, Rotate)
 	return Panel
 end
 
+function PANEL:AddTextEntry(Label, Default)
+	local Panel = self:AddPanel("DTextEntry")
+	Panel:SetFont("ACF_Control")
+	Panel:SetValue(Default or "")
+
+	local LabelPanel = self:AddLabel(Label)
+	LabelPanel:DockMargin(0, 0, 0, 5)
+	LabelPanel:InvalidateLayout()
+
+	return Panel
+end
+
 function PANEL:PerformLayout()
 	self:SizeToChildren(true, true)
 end

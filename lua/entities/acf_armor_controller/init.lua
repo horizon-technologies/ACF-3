@@ -86,6 +86,11 @@ do
 		Entity.Owner = Player -- MUST be stored on ent for PP
 		Entity.DataStore = Entities.GetArguments("acf_armor_controller")
 
+		Entity.MeshData = {
+			Vertices = {},
+			Convexes = {},
+		}
+
 		UpdateArmorController(Entity, Data)
 
 		-- Finish setting up the entity
@@ -98,6 +103,11 @@ do
 		Entity:UpdateOverlay(true)
 
 		CheckLegal(Entity)
+
+		net.Start("acf_mesh_full")
+		net.WriteEntity(Entity)
+		net.WriteTable(Entity.MeshData)
+		net.Broadcast()
 
 		return Entity
 	end
@@ -164,6 +174,72 @@ do
 		self.ACF.Armour    = Armour * Percent
 		self.ACF.MaxArmour = Armour
 		self.ACF.Type      = "Prop"
+	end
+end
+
+-- Tool integration
+do
+	util.AddNetworkString("acf_mesh_full")
+	util.AddNetworkString("acf_mesh_clear")
+
+	util.AddNetworkString("acf_mesh_v_new")
+	util.AddNetworkString("acf_mesh_v_upd")
+	util.AddNetworkString("acf_mesh_v_rem")
+	util.AddNetworkString("acf_mesh_c_new")
+	util.AddNetworkString("acf_mesh_c_upd")
+	util.AddNetworkString("acf_mesh_c_rem")
+
+
+	--- Adds a vertex to the controller
+	--- @param Pos any The local position to add it at, or nil for 0,0,0
+	--- @return integer The index of the created vertex
+	function ENT:AddVertex(Pos)
+		local newindex = #self.MeshData.Vertices + 1
+		self.MeshData.Vertices[newindex] = {}
+		self.MeshData.Vertices[newindex].Pos = Pos or Vector()
+
+		net.Start("acf_mesh_v_new")
+		net.WriteEntity(self)
+		net.WriteVector(Pos or Vector())
+		net.Broadcast()
+		return newindex
+	end
+
+	--- Removes a vertex from the controller
+	--- @param ID any The index of the vertex to remove
+	function ENT:RemoveVertex(ID)
+		table.remove(self.MeshData.Vertices, ID)
+	end
+
+	--- Updates a vertex in the controller
+	--- @param ID any The index of the vertex to update
+	--- @param Data any The new data to set
+	function ENT:UpdateVertex(ID, Data)
+		for k, v in pairs(Data) do
+			self.MeshData.Vertices[ID][k] = v
+		end
+	end
+
+	--- Adds a convex to the controller
+	--- @param vertexIDs any The indices of the vertices to use in the convex
+	function ENT:AddConvex(vertexIDs)
+		local newindex = #self.MeshData.Convexes + 1
+		self.MeshData.Convexes[newindex] = {}
+	end
+
+	--- Removes a convex from the controller
+	--- @param ID any The index of the convex to remove
+	function ENT:RemoveConvex(ID)
+		table.remove(self.MeshData.Convexes, ID)
+	end
+
+	--- Updates a convex in the controller
+	--- @param ID any The index of the convex to update
+	--- @param Data any The new data to set
+	function ENT:UpdateConvex(ID, Data)
+		for k, v in pairs(Data) do
+			self.MeshData.Convexes[ID][k] = v
+		end
 	end
 end
 

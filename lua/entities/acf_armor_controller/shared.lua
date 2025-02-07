@@ -34,3 +34,18 @@ properties.Add("armorcontroller", {
 		print("test")
 	end
 })
+
+-- Tool integration
+-- This isn't high enough quality to be a standalone library... I just needed something for this.
+-- This handles registering functions for synchronization
+do
+	function RegisterCommand(CommandID)
+		
+	end
+
+	if CLIENT then
+
+	elseif SERVER then
+
+	end
+end

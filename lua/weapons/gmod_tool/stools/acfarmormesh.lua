@@ -258,7 +258,13 @@ elseif SERVER then -- Serverside-only stuff
 			local ent = self.controller.ent
 			if not IsValid(ent) then return false end
 
-			ent:AddVertex(Trace.HitPos)
+			if Player:KeyDown(IN_SPEED) then
+				-- Add a convex
+				ent:AddConvex(Trace.HitPos)
+			else
+				-- Add a vertex
+				ent:AddVertex(Trace.HitPos)
+			end
 		end
 		return true
 	end
